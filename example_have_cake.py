@@ -39,15 +39,14 @@ class HaveCakeProblem(Problem):
 
     def actions(self, state: str) -> list:  # of Action
         possible_actions = []
-        kb = PropKB()
-        kb.tell(decode_state(state, self.state_map).pos_sentence())
-        for action in self.actions_list:
+        stateclauses = decode_state(state, self.state_map)
+        for action in self.get_actions():
             is_possible = True
             for clause in action.precond_pos:
-                if clause not in kb.clauses:
+                if clause not in stateclauses:
                     is_possible = False
             for clause in action.precond_neg:
-                if clause in kb.clauses:
+                if clause in stateclauses:
                     is_possible = False
             if is_possible:
                 possible_actions.append(action)
